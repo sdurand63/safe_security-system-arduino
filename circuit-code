@@ -1,0 +1,590 @@
+// Inclusion des bibliothèques necessaires
+#include <Keypad.h>
+#include <stdlib.h>
+
+
+// décalaration leds
+const int led1 = 13; // rouges
+const int led2 = 12;
+const int led3 = 11;
+const int led4 = 10;
+const int led5 = 9; // vertes - lecteur
+const int led6 = 15; // MA1
+const int led7 = 16; // MA2
+const int led8 = 17; // MA3
+const int led9 = 18; // MA4
+const int led10 = 19; // bleue - coffre ouvert
+
+//						----------KEYPAD----------
+// Création keypad
+const byte ROWS = 4; //quatre lignes
+const byte COLS = 3; //trois colonnes
+char keys[ROWS][COLS] = {
+  {'1','2','3'},
+  {'4','5','6'},
+  {'7','8','9'},
+  {'*','0','#'}
+};
+
+// Déclaration des broches des lignes et colonnes du keypad
+byte rowPins[ROWS] = {7, 6, 5, 4};
+byte colPins[COLS] = {3, 2, 8}; 
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+//						----------KEYPAD----------
+
+//				 ---------Niveaux de sécurité----------
+bool validation = false;
+//				 ---------Niveaux de sécurité----------
+
+// variables utilisées dans plusieurs MA
+int compteur = 0;
+int compteur_erreur = 0;
+
+//						----------MA1----------
+bool MA1_valide = false;
+//  					----------MA1----------
+
+// 						----------MA2----------
+bool MA2_valide = false;
+//						----------MA2-----------
+
+//						----------MA3-----------
+bool MA3_valide = false;
+//						----------MA3-----------
+
+//						----------MA4-----------
+bool MA4_valide = false;
+//						----------MA4-----------
+
+
+
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT); 
+  pinMode(led5, OUTPUT); 
+  pinMode(led6, OUTPUT);
+  pinMode(led7, OUTPUT);
+  pinMode(led8, OUTPUT);
+  pinMode(led9, OUTPUT);
+  pinMode(led10, OUTPUT);
+
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  digitalWrite(led5, LOW);
+  digitalWrite(led6, LOW);
+  digitalWrite(led7, LOW);
+  digitalWrite(led8, LOW);
+  digitalWrite(led9, LOW);
+  digitalWrite(led10, LOW);
+}
+
+
+
+void loop()
+{
+  double tension = analogRead(A0); // Lecture de la tension de sortie
+  tension /= 204; // convertie pour correspondre à nos valeurs de tension en volts
+  
+  if (tension > 0.86 && tension < 0.90){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau4();
+    if (validation == true){
+      coffre_ouvert();
+    }
+  }
+
+  else if (tension > 1.50 && tension < 1.54){
+    digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau2();
+    if (validation == true){
+      coffre_ouvert();
+    }
+  }
+
+  else if (tension > 1.89 && tension < 1.93){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau4();
+    if (validation == true){
+      coffre_ouvert();
+    }
+  }
+
+  else if (tension > 2.33 && tension < 2.37){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau2();
+    if (validation == true){
+      coffre_ouvert();
+    }
+  }
+
+  else if (tension > 2.53 && tension < 2.57){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau4();
+    if (validation == true){
+      coffre_ouvert();
+    }
+  }
+
+  else if (tension > 2.71 && tension < 2.75){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau3();
+    if (validation == true){
+      coffre_ouvert();
+	}
+  }
+
+  else if (tension > 3.07 && tension < 3.11){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau2();
+    if (validation == true){
+      coffre_ouvert();
+	}
+  }
+
+  else if (tension > 3.38 && tension < 3.42){
+	digitalWrite(led5, HIGH);
+    Serial.print("\n\n> Premier niveau reussi, suite de l'authentification... \n\n");
+    niveau1();
+    if (validation == true){
+      coffre_ouvert();
+	}
+  }         
+  
+  else 
+   {
+     Serial.print("\n> erreur, mauvaise tension \n");
+     delay(8000);
+   }
+  
+}
+
+// 				----------Création des modes d'authentification----------
+
+void MA1()
+{
+  delay(2000);
+  const char question1[] = {"Quel est le prenom de votre chien ?"};
+  const char question2[] = {"En quelle annee l'Amerique a-t-elle ete decouverte ?"};
+  const char question3[] = {"Quel est le prenom de votre belle-mere ? "};
+  const char question4[] = {"Quelle note avez-vous eu au bac de philosophie ?"};
+
+  const char reponses1[] = {"1. Nesquick  2. Thibou  3. Thiago  4. Wilson"};
+  const char reponses2[] = {"1. 1492  2. 1501  3. 1486  4. 1481"};
+  const char reponses3[] = {"1. Sylvie  2. Michelle  3. Germaine  4. Jacqueline"};
+  const char reponses4[] = {"1. 8/20  2. 18/20  3. 11/20  4. 14/20"};
+
+  const char indice_bonne_rep[] = {'3', '1', '2', '1'};
+  char indice_rep[] = {'0', '0', '0', '0'};
+  bool bonne_rep[] = {false, false, false, false};
+  
+  compteur = 1;
+  if (compteur == 1)
+  {
+    while(bonne_rep[0] == false) {
+      Serial.println(question1); //On affiche la question
+      delay(500);
+      Serial.println(reponses1); //On affiche les reponses
+      char key = keypad.getKey();
+      
+      while(bonne_rep[0] == false){
+      key = keypad.getKey(); //On recupere la reponse
+      if (key != NO_KEY){  
+        indice_rep[0] = key; //On stocke la reponse
+        bonne_rep[0] = true; //
+
+      }
+      }
+    // Comparaison des réponses pour validation              
+	    if (indice_bonne_rep[0] != indice_rep[0]) { 
+          Serial.print("Mauvaise reponse \n\n");  
+          delay(1000);
+          compteur_erreur++; //On incrémente le compteur d'erreur
+          bonne_rep[0] = false; //On remet la bonne reponse a false
+       
+        }
+        else {
+         Serial.print("Bonne reponse \n\n");
+         compteur++;
+         digitalWrite(led1, HIGH); //On allume la led correspondante
+         delay(1000);
+        }
+      	if (compteur_erreur == 4)
+  		{
+    		Serial.println("4 erreurs, blocage pendant 30 secondes."); 
+    		digitalWrite(led1, LOW);
+ 			digitalWrite(led2, LOW);
+  			digitalWrite(led3, LOW);
+  			digitalWrite(led4, LOW);
+            delay(30000); //On bloque le digicode pendant 30 secondes
+          	compteur = 1; //On retourne à la première question
+    		compteur_erreur = 0; //On remet le compteur d'erreur à 0
+            break;
+  		}
+    }
+  } 
+  
+  
+  if (compteur == 2)
+  {
+    while(bonne_rep[1] == false){
+      Serial.println(question2);
+      delay(500);
+      Serial.println(reponses2);
+      char key = keypad.getKey();
+      
+      while(bonne_rep[1] == false){
+      key = keypad.getKey();
+      if (key != NO_KEY){  
+        indice_rep[1] = key;
+        bonne_rep[1] = true;
+      }
+      }
+            
+	    if (indice_bonne_rep[1] != indice_rep[1]) {
+          Serial.print("Mauvaise reponse \n\n");
+          delay(1000);
+          compteur_erreur++;
+          bonne_rep[1] = false;
+        }
+        else {
+         Serial.print("Bonne reponse \n\n");
+         compteur++;
+         digitalWrite(led2, HIGH);
+         delay(1000);
+        }
+      	if (compteur_erreur == 4)
+  		{
+    		Serial.println("4 erreurs, blocage pendant 30 secondes. ");
+            digitalWrite(led1, LOW);
+ 			digitalWrite(led2, LOW);
+  			digitalWrite(led3, LOW);
+  			digitalWrite(led4, LOW);
+    		delay(30000);
+          	compteur = 1;
+    		compteur_erreur = 0;
+            break;
+  		}
+    }
+    }
+  
+  if (compteur == 3)
+  {
+    while(bonne_rep[2] == false){
+      Serial.println(question3);
+      delay(500);
+      Serial.println(reponses3);
+      char key = keypad.getKey();
+      
+      while(bonne_rep[2] == false){
+      key = keypad.getKey();
+      if (key != NO_KEY){  
+        indice_rep[2] = key;
+        bonne_rep[2] = true;
+      }
+      }
+            
+	    if (indice_bonne_rep[2] != indice_rep[2]) {
+          Serial.print("Mauvaise reponse \n\n");
+          delay(1000);
+          compteur_erreur++;
+          bonne_rep[2] = false;
+        }
+        else {
+         Serial.print("Bonne reponse \n\n");
+         compteur++;
+         digitalWrite(led3, HIGH);
+         delay(1000);
+        }
+      	if (compteur_erreur == 4)
+  		{
+    		Serial.println("4 erreurs, blocage pendant 30 secondes.");
+    		digitalWrite(led1, LOW);
+ 			digitalWrite(led2, LOW);
+  			digitalWrite(led3, LOW);
+  			digitalWrite(led4, LOW);
+            delay(30000);
+            compteur = 1;
+    		compteur_erreur = 0;
+            break;
+  		}      
+    }
+    }
+  
+  if (compteur == 4)
+  {
+    while(bonne_rep[3] == false){
+      Serial.println(question4);
+      delay(500);
+      Serial.println(reponses4);
+      char key = keypad.getKey();
+      
+      while(bonne_rep[3] == false){
+      key = keypad.getKey();
+      if (key != NO_KEY){  
+        indice_rep[3] = key;
+        bonne_rep[3] = true;
+      }
+      }
+	    if (indice_bonne_rep[3] != indice_rep[3]) {
+          Serial.print("Mauvaise reponse \n\n");
+          delay(1000);
+          compteur_erreur ++;
+          bonne_rep[3] = false;
+        }
+        else {
+         Serial.print("Bonne reponse \n\n");
+         compteur++;
+         digitalWrite(led4, HIGH);
+        }
+      
+      	if (compteur_erreur == 4)
+  		{
+    		Serial.println("4 erreurs, blocage pendant 30 secondes. ");
+    		digitalWrite(led1, LOW);
+ 			digitalWrite(led2, LOW);
+  			digitalWrite(led3, LOW);
+  			digitalWrite(led4, LOW);
+            delay(30000);
+            compteur = 1;
+    		compteur_erreur = 0;
+            break;
+  		}
+    }
+    }
+  
+  if(compteur == 5){
+    MA1_valide = true;
+    digitalWrite(led6, HIGH); //On allume la led correspondante
+    delay(1000);
+    digitalWrite(led1, LOW); //On eteint les leds
+    digitalWrite(led2, LOW);
+    digitalWrite(led3, LOW);
+    digitalWrite(led4, LOW);
+  }
+  
+  
+   
+}     
+
+void MA2()
+{
+  char code_voulu[] = {'2','2','9','4'};
+  char code_entre[] = {'0','0','0','0'};
+  
+  compteur = 0;
+  delay(2000);
+  Serial.println("Veuillez saisir votre code ");
+  while(MA2_valide == false) //Tant que le code n'est pas correct
+  {
+    char key = keypad.getKey(); //On recupere la touche appuyée
+    if (key != NO_KEY){ //Si une touche est appuyée
+
+    code_entre[compteur] = key; //On stocke la touche appuyée au bon indice
+    compteur++; //On incrémente le compteur
+    }
+       
+    if (compteur >= 1)
+    { 
+      digitalWrite(led1, HIGH); //On allume la led correspondante
+    }
+  
+  
+    if(compteur >= 2)
+    { 
+      digitalWrite(led2, HIGH);
+    }
+  
+    if (compteur >= 3)
+    { 
+      digitalWrite(led3, HIGH);
+    }
+    if (compteur >= 4)
+    { 
+      digitalWrite(led4, HIGH);
+      MA2_valide = true;
+    }     
+
+// vérification du code
+      for (int i = 0; i < 4; i++)
+      { 
+        if (code_entre[i] != code_voulu[i]) { //Si le code entré est différent du code voulu
+          MA2_valide = false; //Le code n'est pas correct
+        }
+      }
+        
+  
+      if (MA2_valide == true){ //Si le code est correct
+        digitalWrite(led7, HIGH); //On allume la led correspondante
+        Serial.print("Code bon \n\n"); 
+        delay(1500);
+        digitalWrite(led1, LOW); //On eteint les leds
+        digitalWrite(led2, LOW);
+        digitalWrite(led3, LOW);
+        digitalWrite(led4, LOW);
+        ;
+        
+      }
+                
+         
+        
+        
+    if (compteur == 4 and MA2_valide == false) //Si le code est incorrect
+    {
+    for (int i = 0; i < 4; i++)
+    {
+      digitalWrite(led1, HIGH); //On fait clignoter les leds
+      digitalWrite(led2, HIGH);
+      digitalWrite(led3, HIGH);
+      digitalWrite(led4, HIGH);
+      delay(500);
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+      digitalWrite(led4, LOW);
+      delay(500);
+    }
+     
+      compteur = 0;
+      compteur_erreur++; //On incrémente le compteur d'erreur
+      Serial.print("Code errone, plus que ");
+      Serial.print(4-compteur_erreur); //On affiche le nombre d'essais restants
+      Serial.println(" essai avant blocage. ");
+    }
+    
+    if (compteur_erreur == 4) //Si 4 erreurs
+    {
+      Serial.println("4 erreurs, blocage pendant 30 secondes.");
+      delay(30000); //On bloque le digicode pendant 30 secondes
+      Serial.println("Veuillez saisir votre code ");
+      compteur_erreur = 0; //On remet le compteur d'erreur à 0
+    }
+  }
+}
+
+void MA3()
+{
+  delay(2000);
+  Serial.println("Scan retinien -- Veuillez approche votre oeil droit pres du digicode "); 
+  delay(2000);
+  Serial.println("Scan retinien en cours... ");
+  delay(2500);
+  Serial.print("Scan retinien reussi \n\n");
+  delay(2000);
+  MA3_valide = true; 
+  digitalWrite(led8, HIGH);
+}
+
+void MA4()
+{
+  delay(2000);
+  Serial.println("Scan digital -- Veuillez poser votre pouce droit sur le digicode "); 
+  delay(2000);
+  Serial.println("Scan digital en cours...");
+  delay(2500);
+  Serial.print("Scan digital reussi \n\n");
+  MA4_valide = true; 
+  digitalWrite(led9, HIGH);
+  delay(2000);  
+}
+
+// 				----------Création des modes d'authentification----------
+
+//				----------Création des niveaux de sécurité----------
+
+void niveau1()
+{
+  MA1();
+  if (MA1_valide == true){
+    Serial.print("Suite de l'authentification... \n\n");
+    MA3();
+    if (MA2_valide == true){
+     validation = true;
+    }
+  }
+}
+
+
+void niveau2()
+{
+  MA1();
+  if (MA1_valide == true){
+    Serial.print("Suite de l'authentification... \n\n");
+    MA4();
+    if (MA2_valide == true){
+     validation = true;
+    }
+  }
+}
+
+
+void niveau3()
+{
+  MA2();
+  if (MA2_valide == true){
+    Serial.print("Suite de l'authentification... \n\n");
+    MA4();
+    if (MA4_valide == true){
+     validation = true;
+    }
+  }
+}
+
+
+void niveau4()
+{
+  MA1(); // appel de la fonction MA1
+  if (MA1_valide == true){ // vérification MA1 réussi
+    Serial.print("Suite de l'authentification... \n\n");
+    MA2();
+    if (MA2_valide == true){
+      Serial.print("Suite de l'authentification... \n\n");
+      MA3();
+      if (MA3_valide == true){
+        Serial.print("Suite de l'authentification... \n\n");
+        MA4();
+        if (MA4_valide == true){
+          validation = true;
+        }
+      }
+    }
+  }
+}
+
+
+
+//				----------Création des niveaux de sécurité----------
+
+
+void coffre_ouvert()
+{
+  Serial.println("> Coffre ouvert");
+  digitalWrite(led10, HIGH); // Allulage de la led bleue finale
+  delay(2000);
+  digitalWrite(led5, LOW); 
+  digitalWrite(led6, LOW);
+  digitalWrite(led7, LOW);
+  digitalWrite(led8, LOW);
+  digitalWrite(led9, LOW);
+  delay(10000);
+  digitalWrite(led10, LOW);
+  Serial.println("> Coffre ferme \n> Fin de la simulation"); 
+  delay(2000);
+  exit(1); // fermeture du coffre => fin de simulation
+  
+}
+
