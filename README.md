@@ -2,7 +2,7 @@
 Lien du circuit de la simulation Tinkercad/link of the Tinkercad circuit : [simulation circuit](https://www.tinkercad.com/things/9fMGPyPVTWV-strongbox-3000-circuit)
 
 ## French description
-Ce projet implémente un système de sécurité à authentification multi-niveaux pour un coffre-fort, développé sur Arduino via Tinkercad. Le système intègre un lecteur de carte basé sur la détection de tension et combine jusqu'à 4 méthodes d'authentification différentes pour créer 4 niveaux de sécurité distincts.
+Ce projet, réalisé en début de première année CPI au CESI, implémente un système de sécurité à authentification multi-niveaux pour un coffre-fort, développé sur Arduino via Tinkercad. Le système intègre un lecteur de carte basé sur la détection de tension et combine jusqu'à 4 méthodes d'authentification différentes pour créer 4 niveaux de sécurité distincts.
 
 **Fonctionnement du Système** :  
 1. Détection de Carte : L'utilisateur passe une carte, le système lit la tension via la broche analogique A0
@@ -27,7 +27,7 @@ Authentification biométrique simulée par scan rétinien
 Authentification biométrique simulée par empreinte digitale  
 
 ## English description
-This project implements a multi-level authentication security system for a safe, developed on Arduino using Tinkercad. The system features a card reader based on voltage detection and combines up to 4 different authentication methods to create 4 distinct security levels.
+This project, created at the beginning of the first year of the CPI program at CESI, implements a multi-level authentication security system for a safe, developed on Arduino using Tinkercad. The system features a card reader based on voltage detection and combines up to 4 different authentication methods to create 4 distinct security levels.
 
 **System Operation** : 
 1. Card Detection: User swipes a card, system reads the voltage via analog pin A0
