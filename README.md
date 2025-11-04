@@ -16,7 +16,7 @@ Ce projet, réalisé en début de première année CPI au CESI, implémente un s
 - Prénom du chien
 - Année de découverte de l'Amérique
 - Prénom de la belle-mère
-- Note au bac de philosophie
+- Note au bac de philosophie  
 Sécurtié : 4 mauvaise réponses déclanche un blocage de 30 secondes. 
 
 **MA2** : Code PIN
