@@ -16,7 +16,8 @@ Ce projet, réalisé en début de première année CPI au CESI, implémente un s
 - Prénom du chien
 - Année de découverte de l'Amérique
 - Prénom de la belle-mère
-- Note au bac de philosophie  
+- Note au bac de philosophie
+Sécurtié : 4 mauvaise réponses déclanche un blocage de 30 secondes. 
 
 **MA2** : Code PIN
 Saisie d'un code à 4 chiffres (par défaut : 2294)
@@ -41,7 +42,7 @@ This project, created at the beginning of the first year of the CPI program at C
 - Dog's name
 - Discovery of America date
 - Mother-in-law's first name
-- Philosophy exam grade
+- Philosophy exam grade  
 Security: 4 wrong answers trigger a 30-second lockout
 
 **MA2** : PIN Code
