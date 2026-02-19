@@ -1,5 +1,6 @@
 # safe-security-system
-Lien du circuit de la simulation Tinkercad/link of the Tinkercad circuit : [simulation circuit](https://www.tinkercad.com/things/9fMGPyPVTWV-strongbox-3000-circuit)
+Lien du circuit de la simulation Tinkercad/link of the Tinkercad circuit : [simulation circuit](https://www.tinkercad.com/things/9fMGPyPVTWV-strongbox-3000-circuit)   
+This project is for educational purposes only.  
 
 ## French description
 Ce projet, réalisé en début de première année CPI au CESI, implémente un système de sécurité à authentification multi-niveaux pour un coffre-fort, développé sur Arduino via Tinkercad. Le système intègre un lecteur de carte basé sur la détection de tension et combine jusqu'à 4 méthodes d'authentification différentes pour créer 4 niveaux de sécurité distincts.
